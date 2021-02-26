@@ -1,0 +1,88 @@
+import numpy as np
+import pandas as pd
+import numpy as np
+import pandas as pd
+daf= pd.read_csv('data.csv')
+from pandas import DataFrame
+from sklearn import linear_model
+import tkinter as tk 
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+
+Stock_Market = daf
+
+df = DataFrame(Stock_Market,columns=['origin','cylinders','displacement','horsepower','weight','acceleration','year','name','Kilometer_per_liter']) 
+
+X = df[['origin','cylinders','displacement','weight']].astype(float)
+Y = df['Kilometer_per_liter'].astype(float)
+
+regr = linear_model.LinearRegression()
+regr.fit(X, Y)
+
+print('Intercept: \n', regr.intercept_)
+print('Coefficients: \n', regr.coef_)
+
+
+# tkinter GUI
+root= tk.Tk()
+
+canvas1 = tk.Canvas(root, width = 500, height = 300)
+canvas1.pack()
+
+# with sklearn
+Intercept_result = ('Intercept: ', regr.intercept_)
+label_Intercept = tk.Label(root, text=Intercept_result, justify = 'center')
+canvas1.create_window(260, 220, window=label_Intercept)
+
+# with sklearn
+Coefficients_result  = ('Coefficients: ', regr.coef_)
+label_Coefficients = tk.Label(root, text=Coefficients_result, justify = 'center')
+canvas1.create_window(260, 240, window=label_Coefficients)
+
+label1 = tk.Label(root, text='Type origin: ')
+canvas1.create_window(100, 100, window=label1)
+
+entry1 = tk.Entry (root) # create 1st entry box
+canvas1.create_window(270, 100, window=entry1)
+
+
+label2 = tk.Label(root, text=' Type displacement: ')
+canvas1.create_window(120, 120, window=label2)
+
+entry2 = tk.Entry (root) # create 2nd entry box
+canvas1.create_window(270, 120, window=entry2)
+
+label3 = tk.Label(root, text='Type No. of cylinders: ')
+canvas1.create_window(140, 140, window=label3)
+
+entry3 = tk.Entry (root) # create 3rd entry box
+canvas1.create_window(270, 140, window=entry3)
+
+
+label4 = tk.Label(root, text='Type weight: ')
+canvas1.create_window(160, 160, window=label4)
+
+entry4 = tk.Entry (root) # create 4th entry box
+canvas1.create_window(270, 160, window=entry4)
+
+
+def values(): 
+    global New_ori #our 1st input variable
+    New_ori = int(entry1.get()) 
+    
+    global New_dis #our 2nd input variable
+    New_dis = int(entry2.get()) 
+    
+    global New_cyl
+    New_cyl=int(entry3.get())
+    
+    global New_hp
+    New_hp=int(entry4.get())
+    
+    Prediction_result  = ('Predicted Kilometer: ', regr.predict([[New_ori,New_dis,New_cyl,New_hp]]))
+    label_Prediction = tk.Label(root, text= Prediction_result, bg='orange')
+    canvas1.create_window(260, 280, window=label_Prediction)
+    
+button1 = tk.Button (root, text='Predict Kilometer',command=values, bg='orange') # button to call the 'values' command above 
+canvas1.create_window(320, 200, window=button1)
+root.mainloop()
